@@ -60,7 +60,7 @@ Paste the following JSON configuration block inside it:
     "airline-agent-server": {
       "command": "/Users/onurgumus/Airline_Project/.venv/bin/python",
       "args": [
-        "/Users/onurgumus/Airline_Project/app.py",
+        "/Users/onurgumus/FlightBooker/app.py",
         "--mcp"
       ]
     }
