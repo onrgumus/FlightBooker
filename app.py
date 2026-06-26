@@ -8,11 +8,18 @@ from langchain_core.messages import HumanMessage, SystemMessage
 # Enterprise Database Simulation
 FLIGHT_DATABASE = {
     "ABC123": {
-        "passenger": "Onur Gumus", 
-        "status": "CANCELLED", 
-        "route": "IST-PARIS", 
-        "class": "Economy",
-        "operation_note": ""
+        "passenger": "Onur Gumus",
+        "flight_number": "TK1823",
+        "origin": "IST",
+        "destination": "CDG",
+        "origin_city": "Istanbul",
+        "destination_city": "Paris",
+        "departure_date": "2026-07-02",
+        "departure_time": "08:30",
+        "seat": "14A",
+        "cabin": "Economy",
+        "status": "CANCELLED",
+        "operation_note": "",
     }
 }
 
@@ -94,13 +101,16 @@ def execute_action_node(state: AgentState) -> Dict:
     print(f"💾 [NODE: Execute Action] Committing database changes. Target Action: {action}")
     
     if action == "rebook":
+        FLIGHT_DATABASE[pnr_code]["flight_number"] = "TK1823"
+        FLIGHT_DATABASE[pnr_code]["departure_date"] = "2026-07-02"
+        FLIGHT_DATABASE[pnr_code]["departure_time"] = "08:30"
         FLIGHT_DATABASE[pnr_code]["status"] = "RESOLVED (REBOOKED)"
         FLIGHT_DATABASE[pnr_code]["operation_note"] = "Passenger rebooked onto flight TK1823."
     elif action == "refund":
         FLIGHT_DATABASE[pnr_code]["status"] = "RESOLVED (REFUNDED)"
         FLIGHT_DATABASE[pnr_code]["operation_note"] = "150 USD cash refund process initiated."
-        
-    return {}
+    
+    return {"pnr_data": FLIGHT_DATABASE[pnr_code]}
 
 # --- 3. EDGE ROUTING DECISIONS ---
 
@@ -131,6 +141,7 @@ workflow.set_entry_point("check_pnr")
 workflow.add_conditional_edges("check_pnr", route_after_check, {"invalid_pnr": "invalid_pnr", "conversation": "conversation"})
 workflow.add_conditional_edges("conversation", route_after_conversation, {"execute_action": "execute_action", END: END})
 workflow.add_edge("invalid_pnr", END)
+workflow.add_edge("execute_action", END)
 
 # Compiling application blueprint
 app = workflow.compile()
