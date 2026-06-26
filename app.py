@@ -68,7 +68,7 @@ def conversation_node(state: AgentState) -> Dict:
         SystemMessage(content="""You are a professional airline customer service assistant. Be helpful, polite, and formal.
         STRICT RULES:
         1. If the customer is just asking questions or exploring options ("Is there a refund?", "What flights are open?" etc.) or has NOT yet made an absolute confirmation, continue the talk normally. Under this condition, DO NOT append any routing tags.
-        2. If and only if the customer explicitly selects or confirms a new flight option (e.g., "Book TK1823", "I choose tomorrow's flight"), append exactly [ROUTE:REBOOK] to the very end of your response text.
+        2. If and only if the customer explicitly selects or confirms a new flight option (e.g., "Book OG1823", "I choose tomorrow's flight"), append exactly [ROUTE:REBOOK] to the very end of your response text.
         3. If and only if the customer explicitly selects or confirms a cash refund (e.g., "Give me a refund", "I want my money back"), append exactly [ROUTE:REFUND] to the very end of your response text.
         
         These hidden tags orchestrate database changes. Never trigger them prematurely until the final agreement is sealed.""")
@@ -101,11 +101,11 @@ def execute_action_node(state: AgentState) -> Dict:
     print(f"💾 [NODE: Execute Action] Committing database changes. Target Action: {action}")
     
     if action == "rebook":
-        FLIGHT_DATABASE[pnr_code]["flight_number"] = "TK1823"
+        FLIGHT_DATABASE[pnr_code]["flight_number"] = "OG1823"
         FLIGHT_DATABASE[pnr_code]["departure_date"] = "2026-07-02"
         FLIGHT_DATABASE[pnr_code]["departure_time"] = "08:30"
         FLIGHT_DATABASE[pnr_code]["status"] = "RESOLVED (REBOOKED)"
-        FLIGHT_DATABASE[pnr_code]["operation_note"] = "Passenger rebooked onto flight TK1823."
+        FLIGHT_DATABASE[pnr_code]["operation_note"] = "Passenger rebooked onto flight OG1823."
     elif action == "refund":
         FLIGHT_DATABASE[pnr_code]["status"] = "RESOLVED (REFUNDED)"
         FLIGHT_DATABASE[pnr_code]["operation_note"] = "150 USD cash refund process initiated."
@@ -150,7 +150,7 @@ app = workflow.compile()
 
 def start_interactive_chat():
     print("\n✈️  [SYSTEM] Persistent LangGraph Airline Desk Operational...")
-    pnr_code = input("⚙️  Enter your PNR reference code (e.g., ABC123): ").strip()
+    pnr_code = input("⚙️  Enter your PNR reference code (e.g., OGS3212): ").strip()
     
     history = []
     initial_prompt = "Hello, my flight has been cancelled. I need immediate assistance."
