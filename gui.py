@@ -183,7 +183,7 @@ st.markdown("""
 with st.sidebar:
     st.markdown("### 🛂 Passenger Verification")
     st.markdown("<hr style='border:none;border-top:1px solid #0f1e3a;margin:6px 0 12px'>", unsafe_allow_html=True)
-    passenger_name = st.text_input("Full Name", placeholder="e.g. Ahmet Yılmaz")
+    passenger_name = st.text_input("Full Name", placeholder="Name & Surname")
     pnr_input      = st.text_input("PNR Reference", value="ABC123")
     user_msg_input = st.text_area("Describe your issue", value="My flight has been cancelled. I need help.", height=80)
     st.markdown("<div style='height:4px'></div>", unsafe_allow_html=True)
